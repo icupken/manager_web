@@ -1,0 +1,34 @@
+[package]
+name = "manager_gui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+eframe = "0.19.0"
+egui_extras = "0.19.0"
+reqwest = { version = "0.11.13", features = ["blocking"] }
+sha256 = "1.1.1"
+rmp-serde = "1.1.1"
+serde_derive = "1.0.145"
+serde = "1.0.145"
+chrono = "0.4.23"
+dotenv = "0.15.0"
+reqwest-wasm = { version = "0.11.15", features = ["blocking"] }
+ehttp = "0.2.0"
+
+# web:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1.6"
+tracing-wasm = "0.2"
+reqwest-wasm = { version = "0.11.15", features = ["blocking"] }
+ehttp = "0.2.0"
+
+
+[profile.release]
+opt-level = 2 # fast and small wasm
+
+# Optimize all dependencies even in debug builds:
+[profile.dev.package."*"]
+opt-level = 2
