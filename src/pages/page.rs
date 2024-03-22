@@ -1,7 +1,7 @@
 use leptonic::prelude::*;
 use leptos::*;
-
-
+use time::OffsetDateTime;
+use tracing::info;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 struct ObjectStat {
@@ -47,36 +47,71 @@ pub fn Page() -> impl IntoView {
         foam: "3.1".to_string(),
         wax: "0.4".to_string(),
     };
+    let obj3 = ObjectStat {
+        id: 17,
+        name: "Брн.Павловский".to_string(),
+        term: 14960,
+        cash: 10312,
+        shampoo: "2.7".to_string(),
+        foam: "3.1".to_string(),
+        wax: "0.4".to_string(),
+    };
+    let obj4 = ObjectStat {
+        id: 17,
+        name: "Брн.Павловский".to_string(),
+        term: 14960,
+        cash: 10312,
+        shampoo: "2.7".to_string(),
+        foam: "3.1".to_string(),
+        wax: "0.4".to_string(),
+    };
+    let obj5 = ObjectStat {
+        id: 17,
+        name: "Брн.Павловский".to_string(),
+        term: 14960,
+        cash: 10312,
+        shampoo: "2.7".to_string(),
+        foam: "3.1".to_string(),
+        wax: "0.4".to_string(),
+    };
     let mut StatList = Statistic::new();
     StatList.date = "27.02.2024".to_string();
     StatList.data.push(obj1);
     StatList.data.push(obj2);
+    StatList.data.push(obj3);
+    StatList.data.push(obj4);
+    StatList.data.push(obj5);
     let (stat_list, _set_stat_list) = create_signal(StatList);
 
     view! {
         <Box class="main-container">
             <Box class="card">
-                <picture>
-                    <source
-                        srcset="https://raw.githubusercontent.com/icupken/manager_web/main/logo%20(1).png"
-                        media="(prefers-color-scheme: dark)"
+                <Stack orientation=StackOrientation::Horizontal spacing=Size::Px(90)>
+                    <Box style="background: transparent; margin-left: 50px">
+                        <picture>
+                            <source
+                                srcset="https://raw.githubusercontent.com/icupken/manager_web/main/logo%20(1).png"
+                                media="(prefers-color-scheme: dark)"
+                            />
+                            <img
+                                src="https://raw.githubusercontent.com/icupken/manager_web/main/logo%20(1).png"
+                                alt="Leptos Logo"
+                                height="210"
+                                width="210"
+                            />
+                        </picture>
+                    </Box>
+                    <DateSelector
+                        value=OffsetDateTime::now_utc()
+                        on_change=move |v| { info!("{:?}", v) }
                     />
-                    <img
-                        src="https://raw.githubusercontent.com/icupken/manager_web/main/logo%20(1).png"
-                        alt="Leptos Logo"
-                        height="150"
-                        width="150"
-                    />
-                </picture>
-
-                <p>{stat_list.get().date}</p>
-
-                <TableContainer style = "--table-body-cell-padding: 20px">
+                </Stack>
+                <TableContainer style="--table-body-cell-padding: 20px">
                     <Table bordered=true hoverable=true>
                         <TableHeader>
                             <TableRow>
                                 // <TableHeaderCell min_width=true>"#"</TableHeaderCell>
-                                <TableHeaderCell>"Имя"</TableHeaderCell>
+                                <TableHeaderCell>"Объект"</TableHeaderCell>
                                 <TableHeaderCell>"Терминал"</TableHeaderCell>
                                 <TableHeaderCell>"Карты"</TableHeaderCell>
                                 <TableHeaderCell>"Итого"</TableHeaderCell>
@@ -86,30 +121,36 @@ pub fn Page() -> impl IntoView {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            
-                                <For
-                                    each=move || stat_list.get().data
-                                    key=|n| n.id
-                                    children=move |data: ObjectStat| {
-                                        view! {
-                                            <TableRow>
+
+                            <For
+                                each=move || stat_list.get().data
+                                key=|n| n.id
+                                children=move |data: ObjectStat| {
+                                    view! {
+                                        <TableRow>
                                             <TableCell>{data.name}</TableCell>
                                             <TableCell>{data.term}</TableCell>
                                             <TableCell>{data.cash}</TableCell>
-                                            <TableCell>{data.cash+data.term}</TableCell>
+                                            <TableCell>{data.cash + data.term}</TableCell>
                                             <TableCell>{data.shampoo}</TableCell>
                                             <TableCell>{data.foam}</TableCell>
                                             <TableCell>{data.wax}</TableCell>
-                            </TableRow>
-
-                                        }
+                                        </TableRow>
                                     }
-                                />
+                                }
+                            />
 
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <div class="no_data">
+                    <p>
+                        {move || {
+                            if stat_list.get().data.is_empty() { "Нет данных" } else { "" }
+                        }}
 
+                    </p>
+                </div>
             </Box>
         </Box>
     }

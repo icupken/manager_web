@@ -19,6 +19,7 @@ strip = true
 codegen-units = 1
 
 [dependencies]
+chrono = "0.4.35"
 console_error_panic_hook = "0.1.7"
 leptonic = { version = "0.5.0", features = ["csr"] }
 leptos = { version = "0.6.5", features = ["csr"] }
@@ -26,6 +27,7 @@ leptos-use = "0.10.5"
 leptos_meta = { version = "0.6.5", features = ["csr"] }
 leptos_router = { version = "0.6.5", features = ["csr"] }
 thiserror = "1.0.56"
+time = "0.3.31"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 tracing-wasm = "0.2.1"

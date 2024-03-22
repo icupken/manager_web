@@ -2,8 +2,8 @@ use leptonic::prelude::*;
 use leptos::*;
 use leptos_meta::{provide_meta_context, Meta, Stylesheet, Title};
 use leptos_router::*;
-use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
 use tracing::info;
+use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
 
 use crate::{
     error_template::{AppError, ErrorTemplate},
@@ -17,7 +17,6 @@ pub struct GlobalState {
 
 fn not_authorized() -> bool {
     let (flag, _set_flag, _remove_flag) = use_session_storage::<bool, FromToStringCodec>("my-flag");
-    info!("{}", flag.get());
     flag.get()
 }
 
@@ -33,8 +32,7 @@ pub fn App() -> impl IntoView {
 
         <Stylesheet id="leptos" href="/pkg/leptonic-template-ssr.css"/>
         <Stylesheet href="https://fonts.googleapis.com/css?family=Roboto&display=swap"/>
-
-        <Title text="Leptonic CSR template"/>
+        <Title text="Статистика"/>
 
         <Root default_theme=LeptonicTheme::default()>
             <Router fallback=|| {
