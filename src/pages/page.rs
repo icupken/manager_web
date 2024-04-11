@@ -2,8 +2,9 @@ use leptonic::prelude::*;
 use leptos::*;
 use time::OffsetDateTime;
 use tracing::info;
+    use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize ,Clone, Debug, PartialEq, Eq, Hash)]
 struct ObjectStat {
     id: u8,
     name: String,
@@ -13,15 +14,13 @@ struct ObjectStat {
     foam: String,
     wax: String,
 }
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 struct Statistic {
-    date: String,
     data: Vec<ObjectStat>,
 }
 impl Statistic {
     fn new() -> Self {
         Statistic {
-            date: String::new(),
             data: Vec::new()
         }
     }
@@ -29,9 +28,9 @@ impl Statistic {
 
 #[component]
 pub fn Page() -> impl IntoView {
-    let obj1 = ObjectStat {
-        id: 8,
-        name: "Брн.Челюскинцев".to_string(),
+    let obj1 =  ObjectStat {
+        id: 17,
+        name: "Брн.Павловский".to_string(),
         term: 14960,
         cash: 10312,
         shampoo: "2.7".to_string(),
@@ -65,23 +64,13 @@ pub fn Page() -> impl IntoView {
         foam: "3.1".to_string(),
         wax: "0.4".to_string(),
     };
-    let obj5 = ObjectStat {
-        id: 17,
-        name: "Брн.Павловский".to_string(),
-        term: 14960,
-        cash: 10312,
-        shampoo: "2.7".to_string(),
-        foam: "3.1".to_string(),
-        wax: "0.4".to_string(),
-    };
+
     let mut StatList = Statistic::new();
-    StatList.date = "27.02.2024".to_string();
     StatList.data.push(obj1);
     StatList.data.push(obj2);
     StatList.data.push(obj3);
     StatList.data.push(obj4);
-    StatList.data.push(obj5);
-    let (stat_list, _set_stat_list) = create_signal(StatList);
+    let (stat_list, set_stat_list) = create_signal(StatList);
 
     view! {
         <Box class="main-container">
@@ -103,7 +92,19 @@ pub fn Page() -> impl IntoView {
                     </Box>
                     <DateSelector
                         value=OffsetDateTime::now_utc()
-                        on_change=move |v| { info!("{:?}", v) }
+                        on_change=move |v| {
+                            let obj5 = ObjectStat {
+                                id: 17,
+                                name: "Брн.Павловский".to_string(),
+                                term: 14960,
+                                cash: 10312,
+                                shampoo: "2.7".to_string(),
+                                foam: "3.1".to_string(),
+                                wax: "0.4".to_string(),
+                            };
+                            set_stat_list.update(|f| f.data.push(obj5));
+                            info!("{:?}", v);
+                     }
                     />
                 </Stack>
                 <TableContainer style="--table-body-cell-padding: 20px">
@@ -121,10 +122,9 @@ pub fn Page() -> impl IntoView {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-
                             <For
                                 each=move || stat_list.get().data
-                                key=|n| n.id
+                                key=|data| data.id
                                 children=move |data: ObjectStat| {
                                     view! {
                                         <TableRow>
